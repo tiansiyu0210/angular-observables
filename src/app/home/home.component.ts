@@ -1,26 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 import {Observer} from 'rxjs/Observer';
+import {Subscription} from 'rxjs/SubjectSubscription';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
+  numberSubcription: Subscription;
+  secondSubcription: Subscription;
 
   constructor() { }
 
   ngOnInit() {
-    // const myNumber = Observable.interval(1000);
-    // myNumber.subscribe(
-    //   (number: number) => {
-    //     console.log(number);
-    //   }
-    // );
+    const numberObser = Observable.interval(1000);
+    this.numberSubcription = numberObser.subscribe(
+      (number: number) => {
+        console.log(number);
+      }
+    );
 
-    const myObs = Observable.create(
+    const secondObser = Observable.create(
       (obs: Observer<string>) => {
         setTimeout(
           () => {
@@ -37,11 +40,16 @@ export class HomeComponent implements OnInit {
       }
     );
 
-    myObs.subscribe(
+    this.secondSubcription = secondObser.subscribe(
       (data: string) => {console.log(data); },
       (error: string) => {console.log(error); },
       () => {console.log('complete'); }
     );
+  }
+
+  ngOnDestroy(): void {
+    this.secondSubcription.unsubscribe();
+    this.numberSubcription.unsubscribe();
   }
 
 }
