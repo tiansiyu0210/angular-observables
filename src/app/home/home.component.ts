@@ -52,5 +52,5 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.numberSubcription.unsubscribe();
   }
 
-  //reactivex.io/rxjs
+  // reactivex.io/rxjs
 }
